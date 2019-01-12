@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>JS + CSS Clock</title>
+</head>
+<body>
+<!-- https://github.com/wesbos/JavaScript30 -->
+
+    <div class="clock">
+      <div class="clock-face">
+        <div class="marker marker-half-hour"></div>
+        <div class="marker marker-quarter-hour"></div>
+        <div class="marker marker-five"></div>
+        <div class="marker marker-ten"></div>
+        <div class="marker marker-twenty"></div>
+        <div class="marker marker-twentyfive"></div>
+        <div class="hand hour-hand"></div>
+        <div class="hand min-hand"></div>
+        <div class="hand second-hand"></div>
+      </div>
+    </div>
+
+
+  <style>
+    html {
+      background-color: palevioletred;
+      background-size: cover;
+      font-family: 'helvetica neue';
+      text-align: center;
+      font-size: 10px;
+    }
+
+    body {
+      margin: 0;
+      font-size: 2rem;
+      display: flex;
+      flex: 1;
+      min-height: 100vh;
+      align-items: center;
+    }
+
+    .clock {
+      width: 30rem;
+      height: 30rem;
+      border: 20px solid white;
+      border-radius: 50%;
+      margin: 50px auto;
+      position: relative;
+      padding: 2rem;
+      box-shadow:
+        0 0 0 4px rgba(0,0,0,0.1),
+        inset 0 0 0 3px #EFEFEF,
+        inset 0 0 10px black,
+        0 0 10px rgba(0,0,0,0.2);
+    }
+
+    .clock-face {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform: translateY(-3px); /* account for the height of the clock hands */
+    }
+
+    .hand {
+      width: 50%;
+      height: 6px;
+      background: black;
+      position: absolute;
+      top: 50%;
+      transform-origin: right;
+      transform: rotate(90deg);
+      transition: all 0.05s linear;
+    }
+
+    .marker {
+      background: linear-gradient(black 7%, transparent 7% 93%, black 93%);
+      height: 32rem;
+      position: absolute;
+    }
+
+    .marker-half-hour, 
+    .marker-quarter-hour {
+      width: 7px;
+      transform: translateX(-7px);
+    }
+
+    .marker-half-hour {
+      left: 51%;
+      top: -7px;
+    }
+
+    .marker-quarter-hour {
+      left: 49%;
+      top: -7px;
+      transform: rotate(90deg);
+    }
+
+    .marker-ten,
+    .marker-five,
+    .marker-twenty,
+    .marker-twentyfive {
+      width: 4px;
+      left: 50%;
+      top: -4px;
+    }
+
+    .marker-five {
+      transform: rotate(29deg);
+    }
+
+    .marker-ten {
+      transform: rotate(59deg);
+    }
+
+    .marker-twenty {
+      transform: rotate(119deg)
+    }
+
+    .marker-twentyfive {
+      transform: rotate(151deg)
+    }
+
+    .second-hand {
+      background-color: red;
+    }
+
+  </style>
+
+  <script>
+    const secondsHand = document.querySelector('.second-hand')
+    const minutesHand = document.querySelector('.min-hand')
+    const hourHand = document.querySelector('.hour-hand')
+
+    const secondsMinutesDegrees = (timeValue) => {
+      return timeValue * (360/60) + 90
+    } 
+
+    const hoursDegrees = (timeValue) => {
+      return timeValue * (360/12) + 90
+    } 
+    
+    window.setInterval(function() {
+      let date = new Date()
+      setSeconds(date.getSeconds())
+      setMinutes(date.getMinutes())
+      setHour(date.getHours())
+    }, 1000)
+
+    function setSeconds (seconds) {
+      let rotation = secondsMinutesDegrees(seconds)
+      secondsHand.style.transform = `rotate(${rotation}deg)`;
+      if (seconds === 59) {
+        console.log(true)
+        secondsHand.style.removeProperty("transition");
+      }
+    }
+
+    function setMinutes (minutes) {
+      minutesHand.style.transform = `rotate(${secondsMinutesDegrees(minutes)}deg)`;
+    }
+
+    function setHour (hour) {
+      hourHand.style.transform = `rotate(${hoursDegrees(hour)}deg)`;
+    }
+
+  </script>
+</body>
+</html>
